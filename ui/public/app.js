@@ -1,3 +1,10 @@
+/* eslint "react/react-in-jsx-scope": "off" */
+
+/* globals React ReactDOM */
+
+/* eslint "react/jsx-no-undef": "off" */
+
+/* eslint "no-alert": "off" */
 class ProductList extends React.Component {
   constructor() {
     super();
@@ -14,11 +21,8 @@ class ProductList extends React.Component {
   async loadData() {
     const query = `query{
       productList
-      { id 
-        category 
-        name 
-        price 
-        image
+      { 
+        id category name price image
         }
       }`;
     const response = await fetch(window.ENV.UI_API_ENDPOINT, {
@@ -70,16 +74,19 @@ class ProductList extends React.Component {
 
 }
 
-function ProductRow(props) {
-  const product = props.product;
+function ProductRow({
+  product
+}) {
   return React.createElement("tr", null, React.createElement("td", null, product.name), React.createElement("td", null, "$", product.price), React.createElement("td", null, product.category), React.createElement("td", null, React.createElement("a", {
     href: product.image,
-    target: "_blank"
+    target: "blank"
   }, "View")));
 }
 
-function ProductTable(props) {
-  const productRows = props.products.map(product => React.createElement(ProductRow, {
+function ProductTable({
+  products
+}) {
+  const productRows = products.map(product => React.createElement(ProductRow, {
     key: product.id,
     product: product
   }));
@@ -105,11 +112,14 @@ class ProductAdd extends React.Component {
       category: form.category.value,
       image: form.image.value
     };
-    this.props.createProduct(product);
-    form.name.value = " ";
-    form.category.value = " ";
-    form.price.value = "$";
-    form.image.value = " ";
+    const {
+      createProduct
+    } = this.props;
+    createProduct(product);
+    form.name.value = '';
+    form.category.value = '';
+    form.price.value = '$';
+    form.image.value = '';
   }
 
   render() {
@@ -117,8 +127,11 @@ class ProductAdd extends React.Component {
       name: "productAdd",
       onSubmit: this.handleSubmit,
       className: "addprodstyle"
-    }, React.createElement("div", null, React.createElement("label", null, "Category"), React.createElement("select", {
-      name: "category"
+    }, React.createElement("div", null, React.createElement("label", {
+      htmlFor: "category"
+    }, "Category"), React.createElement("select", {
+      name: "category",
+      id: "category"
     }, React.createElement("option", {
       value: "Shirts",
       defaultValue: true
@@ -130,17 +143,31 @@ class ProductAdd extends React.Component {
       value: "Sweaters"
     }, "Sweaters"), React.createElement("option", {
       value: "Accessories"
-    }, "Accessories")), React.createElement("label", null, "Price Per Unit"), React.createElement("input", {
+    }, "Accessories")), React.createElement("label", {
+      htmlFor: "price",
+      id: "",
+      nesting: ""
+    }, "Price Per Unit"), React.createElement("input", {
       type: "text",
       name: "price",
-      defaultValue: "$"
-    })), React.createElement("div", null, React.createElement("label", null, "Product Name"), React.createElement("input", {
+      defaultValue: "$",
+      id: "price",
+      nesting: " "
+    })), React.createElement("div", null, React.createElement("label", {
+      htmlFor: "name"
+    }, "Product Name"), React.createElement("input", {
       type: "text",
-      name: "name"
-    }), React.createElement("label", null, "Image URL"), React.createElement("input", {
+      name: "name",
+      id: "name"
+    }), React.createElement("label", {
+      htmlFor: "image"
+    }, "Image URL"), React.createElement("input", {
       type: "url",
-      name: "image"
-    })), React.createElement("button", null, "Add Product"));
+      name: "image",
+      id: "image"
+    })), React.createElement("button", {
+      type: "submit"
+    }, "Add Product"));
   }
 
 }
